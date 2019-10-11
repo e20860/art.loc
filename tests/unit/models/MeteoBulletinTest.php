@@ -39,7 +39,7 @@ class MeteoBulletinTest extends \Codeception\Test\Unit
         $this->assertEquals($groups,$mb->groups);
     }
     
-    public function testComposerBulletinDMK()
+    public function testCompilerBulletinDMK()
     {
         $mc = new CompilerBulletinDMK();
         $tcr = mktime(13,30,0,11,18,2019);

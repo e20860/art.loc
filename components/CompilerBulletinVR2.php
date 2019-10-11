@@ -1,20 +1,19 @@
 <?php
 
 /*
- * HMDoll project framework of internet-shop
+ * Current Slavko Project
  * No License (OPEN GNU)
  * Author E.Slavko <e20860@mail.ru>
  */
 
 namespace app\components;
 
-use app\components\MeteoBulletin;
 /**
- * Составляет метеобюллетень на основании данных ДМК
+ * Description of compilerBulletinVR2
  *
- * @author E.Slavko <e20860@mail.ru>
+ * @author admin
  */
-class CompilerBulletinDMK extends MeteopostDMK
+class CompilerBulletinVR2 extends MeteopostVR2
 {
     /**
      * Составляет бюллетень
@@ -72,6 +71,3 @@ class CompilerBulletinDMK extends MeteopostDMK
     
 
 }
-    
-    
-
