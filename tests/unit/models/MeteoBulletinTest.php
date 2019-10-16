@@ -2,8 +2,8 @@
 namespace models;
 
 use app\components\MeteoBulletin;
-use app\components\CompilerBulletinDMK;
-use app\components\RecieverBulletin;
+use app\components\Meteopost;
+use app\components\MeteopostDMK;
 
 class MeteoBulletinTest extends \Codeception\Test\Unit
 {
@@ -41,27 +41,32 @@ class MeteoBulletinTest extends \Codeception\Test\Unit
     
     public function testCompilerBulletinDMK()
     {
-        $mc = new CompilerBulletinDMK();
-        $tcr = mktime(13,30,0,11,18,2019);
+        $mc = new MeteopostDMK();
+        $time = mktime(13,30,0,11,18,2019);
         $temp = -1;
         $hAMS = 90;
         $press = 759;
         $aW = 17;
         $sW = 5;
-        $bul = $mc->createBulletin($temp, $hAMS, $press, $aW, $sW, $tcr);
+        $bul = $mc->compileBulletin(compact('temp', 'hAMS', 'press', 'aW', 'sW', 'time'));
         $contr = "Метео11приближённый-18133-0090-00967-02-661808-04-651910-08-642010-12-632011-16-622111-20-622111-24-622112-30-602212-40-602212";
         $this->assertEquals($contr, (string) $bul);
         $this->assertEquals(-17,$bul->airTempAMS);
+        $mc->measure($temp, $hAMS, $press, $aW, $sW, $time);
+        $bul1 = $mc->getBulletin();
+        $this->assertEquals($contr, (string) $bul1);
     }
     
     public function testRecieverBulletin()
     {
         $contr = "Метео11приближённый-18133-0090-00967-02-661808-04-651910-08-642010-12-632011-16-622111-20-622111-24-622112-30-602212-40-602212";
-        $rb = new RecieverBulletin();
-        $bul = $rb->recieve($contr);
+        $rb = new MeteopostDMK();
+        $rb->recieve($contr);
+        $bul = $rb->getBulletin();
         $this->assertEquals($contr, (string) $bul);
         $contr1 = "Метео1105-18133-0090-00967-02-661808-04-651910-08-642010-12-632011-16-622111-20-622111-24-622112-30-602212-40-602212";
-        $bul1 = $rb->recieve($contr1);
+        $rb->recieve($contr1);
+        $bul1 = $rb->getBulletin();
         $this->assertEquals($contr1, (string) $bul1);
     }
 }

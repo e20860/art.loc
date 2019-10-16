@@ -11,7 +11,7 @@ namespace app\components;
  *
  * @author E.Slavko <e20860@mail.ru>
  */
-abstract class MeteopostVR2 extends Meteopost{
+class MeteopostVR2 extends Meteopost{
     /**
      * Изменение дирекционного угла ветра по высоте
      * @var array
@@ -75,7 +75,15 @@ abstract class MeteopostVR2 extends Meteopost{
                 }
             }
             return $ret;        }
+
     
+        public function compileBulletin($temp, $hAMS, $press, $aW, $sW, $time = null) {
+            $qq = 1;
+        }
+        
+        public function correctBulletin($temp, $hAMS, $press, $aW, $sW, $time = null, $oldMB = null) {
+            $qq = 1;
+        }
+            
     
-    abstract function createBulletin($temp, $hAMS, $press, $aW, $sW, $time = null, $oldMB=null);    
 }

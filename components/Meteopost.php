@@ -17,6 +17,25 @@ namespace app\components;
 abstract class Meteopost {
 
     /**
+     *
+     * @var MeteoBulletin Метеобюллетень 
+     */
+    protected $bulletin;
+    
+    /**
+     * Набор наземных метеоэлементов
+     * @var array 
+     */
+    protected $measurements = [
+        'time'  => 0,
+        'hAMS'  => 0,
+        'temp'  => 15,
+        'press' => 750,
+        'aW'    => 0,
+        'sW'    => 0, // Скорость ветра или дальность сноса пуль
+    ];
+
+    /**
      * Массив стандартых высот бюллетеня
      * @var array
      */
@@ -111,9 +130,29 @@ abstract class Meteopost {
     }
     
     /**
-     * 
-     * @param string $str Строка бюллетеня "Метеосредний/приближённый"
-     * @return \app\components\MeteoBulletin
+     * Управляет составлением/исправлением бюллетеня
+     * @param numeric $time
+     * @throws Exception
+     */
+    protected function manageBulletin($time = null)
+    {
+        if(empty($this->bulletin) && $this->measurements['time']=0) {
+            throw new Exception('Не проведён замер метеоэлементов');
+        }
+        if(!isset($time)) {$time = time();}
+
+        $interval = empty($this->bulletin)? 2 :(integer) ($this->bulletin->ddhhm - $time)/3600;
+        
+        if($interval > 3 && $interval < 12 && $this->bulletin->type = 1){
+            $this->bulletin = $this->correctBulletin($this->measurements, $this->bulletin);
+        } else {
+            $this->bulletin = $this->compileBulletin($this->measurements);
+        }
+    }
+
+        /**
+     * Принимает бюллетень из строкового представления и сохраняет его
+     * @param string $str Строковое представление бюллетеня "Метеосредний/приближённый"
      * @throws Exception
      */
         public function recieve($str) {
@@ -150,8 +189,46 @@ abstract class Meteopost {
             $k = array_shift($arr);
             $groups[$k] = array_shift($arr);
         }
-        return new MeteoBulletin($ddhhm, $type, $numAMS, $hAMS, $airTempAMS, $atmPressAMS, $groups);
+        $this->bulletin = new MeteoBulletin(
+            $ddhhm, $type, $numAMS, $hAMS, $airTempAMS, $atmPressAMS, $groups);
+    }
+    /**
+     * Процедура получения метеоэлементов по результатам замера
+     * @param numeric $temp
+     * @param numeric $hAMS
+     * @param numeric $press
+     * @param numeric $aW
+     * @param numeric $sW
+     * @param timestamp $time
+     */
+    public function measure($temp, $hAMS, $press, $aW, $sW, $time = null)
+    {
+        if(!isset($time)) {$time = time();}
+        $this->measurements['time'] = $time;
+        $this->measurements['temp'] = $temp;
+        $this->measurements['hAMS'] = $hAMS;
+        $this->measurements['press'] = $press;
+        $this->measurements['aW'] = $aW;
+        $this->measurements['sW'] = $sW;
+        $this->manageBulletin($time);
     }
 
-    abstract function createBulletin($temp, $hAMS, $press, $aW, $sW, $time = null, $oldMB=null);    
+    /**
+     * Возвращает метеобюллетень, если он создан
+     * @return Meteobulletin
+     * @throws Exception
+     */
+    public function getBulletin()
+    {
+        if(empty($this->bulletin)) {
+            throw new Exception('Бюллетень отсутствует. Нет замеров/не принят от АМС');
+        }
+        return $this->bulletin;
+    }
+
+
+    abstract function compileBulletin(array $m);
+    
+    abstract function correctBulletin(array $m, MeteoBulletin $oldMB);
+
 }
