@@ -2,7 +2,6 @@
 namespace models;
 
 use app\components\MeteoBulletin;
-use app\components\Meteopost;
 use app\components\MeteopostDMK;
 
 class MeteoBulletinTest extends \Codeception\Test\Unit

@@ -178,7 +178,6 @@ class MeteopostDMK extends Meteopost{
         $tGroup = $this->getTempGroup($vt);
         $wGroup = $this->getWindGroup($m['sW']);
         $dGroup = $this->getAlphaGroup($m['aW']);
-        if(!isset($m['time'])){$m['time'] = time();}
         $ind = 0;
         $groups = [];
         foreach ($this->hh as $k){

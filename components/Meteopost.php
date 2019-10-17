@@ -7,6 +7,9 @@
  */
 
 namespace app\components;
+
+use Exception;
+
 /**
  * Абстрактный класс Meteopost с общими данными 
  * для составления/исправления бюллетеня
@@ -134,16 +137,15 @@ abstract class Meteopost {
      * @param numeric $time
      * @throws Exception
      */
-    protected function manageBulletin($time = null)
+    protected function manageBulletin($time)
     {
-        if(empty($this->bulletin) && $this->measurements['time']=0) {
+        if(empty($this->bulletin) && $this->measurements['time']==0) {
             throw new Exception('Не проведён замер метеоэлементов');
         }
-        if(!isset($time)) {$time = time();}
 
         $interval = empty($this->bulletin)? 2 :(integer) ($this->bulletin->ddhhm - $time)/3600;
         
-        if($interval > 3 && $interval < 12 && $this->bulletin->type = 1){
+        if($interval > 3 && $interval < 12 && $this->bulletin->type == 1){
             $this->bulletin = $this->correctBulletin($this->measurements, $this->bulletin);
         } else {
             $this->bulletin = $this->compileBulletin($this->measurements);
@@ -201,9 +203,9 @@ abstract class Meteopost {
      * @param numeric $sW
      * @param timestamp $time
      */
-    public function measure($temp, $hAMS, $press, $aW, $sW, $time = null)
+    public function measure($temp, $hAMS, $press, $aW, $sW, $time)
     {
-        if(!isset($time)) {$time = time();}
+        //if(!isset($time)) {$time = time();}
         $this->measurements['time'] = $time;
         $this->measurements['temp'] = $temp;
         $this->measurements['hAMS'] = $hAMS;

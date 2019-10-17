@@ -76,13 +76,33 @@ class MeteopostVR2 extends Meteopost{
             }
             return $ret;        }
 
+    /**
+     *  Составляет метеобюллетень
+     * @param array $m Результаты наземных измерений
+     * @return \app\components\MeteoBulletin
+     */
     
-        public function compileBulletin($temp, $hAMS, $press, $aW, $sW, $time = null) {
-            $qq = 1;
+    public function compileBulletin(array $m) 
+    {
+        //$temp, $hAMS, $press, $aW, $sW, $time = null
+        $dH = $m['press'] - 750;
+        $vt = round($this->getVirtualTemp($m['temp']) - 15.9);
+        $tGroup = $this->getTempGroup($vt);
+        $wGroup = $this->getWindGroup($m['sW']);
+        $dGroup = $this->getAlphaGroup($m['aW']);
+        $ind = 0;
+        $groups = [];
+        foreach ($this->hh as $k) {
+            $groups[$k] = $tGroup[$ind] . $dGroup[$ind] . $wGroup[$ind];
+            $ind++;
         }
+        return new MeteoBulletin($m['time'], 2, '', $m['hAMS'], $vt, $dH, $groups);
+    }
         
-        public function correctBulletin($temp, $hAMS, $press, $aW, $sW, $time = null, $oldMB = null) {
-            $qq = 1;
+        public function correctBulletin(array $m, $oldMB = null) {
+            if(!isset($oldMB)){ $oldMB = $this->bulletin;}
+            
+            return $oldMB;
         }
             
     
