@@ -23,7 +23,7 @@ class MeteopostVR2 extends Meteopost{
      *  для определения скорости ветра из таблиц
      *  @var integer
      */
-    protected $maxWindRange = 15;
+    protected $maxWindRange = 150;
     protected $minWindRange = 40;
 
     /**
@@ -77,6 +77,39 @@ class MeteopostVR2 extends Meteopost{
             return $ret;        }
 
     /**
+     * Исправляет группы старого бюллетеня
+     * @param array $groups
+     * @param type $sign
+     * @param type $tempCorrections
+     * @param type $maxIndex
+     * @param type $dGroup
+     * @param type $wGroup
+     * @return type
+     */
+    protected function correctGroups(array $groups, $sign, $tempCorrections, $maxIndex, $dGroup, $wGroup)
+    {
+        $ind = 0;
+        $ret = [];
+        foreach ($this->hh as $hh) {
+            $grp = $groups[$hh];
+            $tg = (integer) substr($grp, 0, 2);
+            $correctSign = $tg>50?-1:1;
+            $dt = $tempCorrections[$ind] * $sign * $correctSign;
+            $tt = sprintf("%02d", $tg + $dt);
+            if ($ind <= $maxIndex) {
+                $nn = $dGroup[$ind];
+                $ss = $wGroup[$ind];
+                $newgrp = $tt . $nn . $ss;
+            } else {
+                $newgrp = substr_replace($grp, $tt, 0, 2);
+            }
+            $ret[$hh] = $newgrp;
+            $ind++;
+        }
+        return $ret;
+    }
+            
+    /**
      *  Составляет метеобюллетень
      * @param array $m Результаты наземных измерений
      * @return \app\components\MeteoBulletin
@@ -99,11 +132,27 @@ class MeteopostVR2 extends Meteopost{
         return new MeteoBulletin($m['time'], 2, '', $m['hAMS'], $vt, $dH, $groups);
     }
         
-        public function correctBulletin(array $m, $oldMB = null) {
-            if(!isset($oldMB)){ $oldMB = $this->bulletin;}
-            
-            return $oldMB;
-        }
-            
+        public function correctBulletin(array $m, MeteoBulletin $oldMB) 
+    {
+        //$temp, $hAMS, $press, $aW, $sW, $time
+        $hrsPassed  = round(($m['time'] - $oldMB->ddhhm)/3600);
+        $oldMB->bulType = 2;
+        $oldMB->ddhhm = $m['time'];
+        $oldMB->atmPressAMS = $m['press'] - 750;
+        $oldMB->hAMS = $m['hAMS'];
+        $vt = round($this->getVirtualTemp($m['temp']) - 15.9);
+        $wGroup = $this->getWindGroup($m['sW']);
+        $dGroup = $this->getAlphaGroup($m['aW']);
+        $deltaTemp = round($vt - $oldMB->airTempAMS);
+        $oldMB->airTempAMS = $vt;
+        $sign = $deltaTemp < 0 ? -1 : 1;
+        $tempCorrections = $this->deltaTau[abs($deltaTemp)];
+        $groups = $oldMB->groups;
+        // максимальный индекс исправления по высоте для показателей ветра.
+        $maxIndex = array_search($this->getMaxHeight($hrsPassed), $this->hh);
+        $oldMB->groups = $this->correctGroups($groups, $sign, $tempCorrections, 
+                                        $maxIndex, $dGroup, $wGroup);
+        return $oldMB;
+    }
     
 }

@@ -8,7 +8,7 @@
 
 namespace app\components;
 
-use app\models\Du;
+use app\components\Du;
 
 /**
  * Деление угломера со знаком (доворот, угол места)
@@ -23,14 +23,13 @@ class Sdu extends Du
      * @param integer $mdu
      */
     public function __construct($sign, $bdu, $mdu) {
-        parent::__construct($bdu, $mdu, $sign);
-        $this->sign = $sign=='+'?1:-1;
+        $this->sign = $sign=='-'?-1:1;
         $this->bdu = $bdu;
         $this->mdu = $mdu;
         $this->rad = $this->duToRad() * $this->sign;
     }
     public function __toString() {
 		$sign =  $this->sign>0?'+':'-';
-        return sprintf("%01s%02d-%02d",$sign,$this->bdu,$this->mdu);
+        return sprintf("%01s%01d-%02d",$sign,$this->bdu,$this->mdu);
     }    
 }

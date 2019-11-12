@@ -6,7 +6,7 @@
  * Author E.Slavko <e20860@mail.ru>
  */
 
-namespace app\coomponents;
+namespace app\components;
 
 /**
  * Дирекционный угол
@@ -21,7 +21,6 @@ class Directional extends Du
      * @param type $mdu
      */
     public function __construct($bdu, $mdu,$sign=1) {
-        parent::__construct($bdu, $mdu, $sign);
         $this->bdu = $bdu;
         $this->mdu = $mdu;
         $this->sign = $sign;

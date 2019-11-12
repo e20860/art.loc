@@ -101,6 +101,18 @@ class MeteoBulletin {
             return $this->$name;
         }
     }
+
+    /**
+     * Магический сеттер
+     * @param mixed $name
+     * @param mixed $value
+     * @return mixed
+     */
+    public function __set($name, $value) {
+        if (property_exists($this, $name)){
+            $this->$name = $value;
+        }
+    }
     
     /**
      * 

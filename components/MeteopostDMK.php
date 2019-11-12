@@ -24,24 +24,6 @@ class MeteopostDMK extends Meteopost{
     protected $deltaAlpha = [1,2,3,3,4,4,4,5,5];
     
     /**
-     * Поправки в температуру бюллетеня "Метеосредний"
-     *            (для исправления)
-     * @var array
-     */
-    protected $deltaTau = [
-        1 => [1, 0, 0, 0, 0, 0, 0, 0, 0],
-        2 => [1, 1, 0, 0, 0, 0, 0, 0, 0],
-        3 => [2, 1, 1, 0, 0, 0, 0, 0, 0],
-        4 => [3, 2, 1, 1, 0, 0, 0, 0, 0],
-        5 => [3, 3, 2, 1, 1, 0, 0, 0, 0],
-        6 => [4, 3, 3, 2, 1, 1, 0, 0, 0],
-        7 => [5, 4, 3, 3, 2, 1, 1, 0, 0],
-        8 => [6, 5, 4, 3, 3, 2, 1, 1, 0],
-        9 => [7, 6, 5, 4, 3, 3, 2, 1, 1],
-        10 => [8, 7, 6, 5, 4, 3, 3, 2, 1],
-    ];
-
-    /**
      *  Две переменные, определяющие максимальные и минимальные значения
      *  для определения скорости ветра из таблиц
      *  @var integer
@@ -99,33 +81,7 @@ class MeteopostDMK extends Meteopost{
                 }
             }
             return $ret;        }
-    /**
-     * Возвращает массив сооставляющей температуры
-     * @param numeric $temp
-     * @return array
-     */
-    protected function getTempGroup($temp)
-    {
-        $ret = [];
-        $t0 = round($temp);
-        if($t0 > -3){
-            $tg = abs($t0<0?$t0-50:$t0);
-            foreach($this->hh as $h){
-                $ret[] = sprintf("%02d",$tg);
-                $h = $h; // Чтобы не ругалась проверка синтаксиса
-            }
-        } elseif ($t0 > -11) {
-            $ret = array_map(function($v){return sprintf("%02d",abs($v-50));},
-                    $this->tempDeviation[abs($t0)]);
-        } else {
-            $dec = $this->tempDeviation[floor(abs($t0)/10)*10];
-            $ed = $this->tempDeviation[abs($t0) - floor(abs($t0)/10)*10];
-            for($i = 0; $i < 9; $i++){
-                $ret[$i] = sprintf("%02d",abs($dec[$i] + $ed[$i]-50));
-            }
-        } 
-        return $ret;
-    }
+
     /**
      * Исправляет группы старого бюллетеня
      * @param array $groups
@@ -198,21 +154,22 @@ class MeteopostDMK extends Meteopost{
      */
     public function correctBulletin(array $m, MeteoBulletin $oldMB) 
     {
-        //$temp, $hAMS, $press, $aW, $sW, $time
-        $hrsPassed  = round(($m['time'] - $oldMB->ddhhm)/3600,1);
+        $hrsPassed  = round(($m['time'] - $oldMB->ddhhm)/3600);
+        $oldMB->bulType = 2;
         $oldMB->ddhhm = $m['time'];
-        $oldMB->atmPressAMS = $m['press'];
+        $oldMB->atmPressAMS = $m['press'] - 750;
         $oldMB->hAMS = $m['hAMS'];
         $vt = round($this->getVirtualTemp($m['temp']) - 15.9);
         $wGroup = $this->getWindGroup($m['sW']);
         $dGroup = $this->getAlphaGroup($m['aW']);
         $deltaTemp = round($vt - $oldMB->airTempAMS);
+        $oldMB->airTempAMS = $vt;
         $sign = $deltaTemp < 0 ? -1 : 1;
         $tempCorrections = $this->deltaTau[abs($deltaTemp)];
         $groups = $oldMB->groups;
         // максимальный индекс исправления по высоте для показателей ветра.
         $maxIndex = array_search($this->getMaxHeight($hrsPassed), $this->hh);
-        $oldMB->groups = correctGroups($groups, $sign, $tempCorrections, 
+        $oldMB->groups = $this->correctGroups($groups, $sign, $tempCorrections, 
                                         $maxIndex, $dGroup, $wGroup);
         return $oldMB;
     }

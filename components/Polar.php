@@ -8,8 +8,8 @@
 
 namespace app\components;
 
-use app\models\Directional;
-use app\models\Sdu;
+use app\components\Directional;
+use app\components\Sdu;
 
 /**
  * Полярные координаты
@@ -83,7 +83,12 @@ class Polar {
      * @return string
      */
     public function __toString() {
-        return 'A = '. $this->a.', Д = ' . $this->d . ', Е = '.$this->e;
+        return 'A = '. $this->a.', Д = ' . round($this->d) . ', Е = '.$this->e;
+    }
+    
+    public function toTable()
+    {
+        return ''. $this->a.' ' . round($this->d) . ' '.$this->e;
     }
 
 }

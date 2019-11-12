@@ -3,6 +3,7 @@ namespace models;
 
 use app\components\MeteoBulletin;
 use app\components\MeteopostDMK;
+use app\components\MeteopostVR2;
 
 class MeteoBulletinTest extends \Codeception\Test\Unit
 {
@@ -67,5 +68,29 @@ class MeteoBulletinTest extends \Codeception\Test\Unit
         $rb->recieve($contr1);
         $bul1 = $rb->getBulletin();
         $this->assertEquals($contr1, (string) $bul1);
+    }
+    
+    public function testCorrectBulletin()    {
+        $oldBul = "Метео1101-16011-0100-81258-0256-581704-0466-601806-0857-612008-1257-622311-1657-632512-2056-622812-2456-632911-3055-633112-4054-613315-5055-603515-6054-613714-8053-603914-1053-614317"; 
+        $rcvd = "Метео1101-16011-0100-81258-02-581704-04-601806-08-612008-12-622311-16-632512-20-622812-24-632911-30-633112-40-613315-50-603515-60-613714-80-603914-10-614317";
+        $amp = new MeteopostVR2();
+        $amp->recieve($oldBul);
+        $bul = $amp->getBulletin();
+        $this->assertEquals($rcvd, (string) $bul);
+        $this->assertEquals(1,$bul->bulType);
+        $time = mktime(9,0,0,11,16,2019);
+        $temp = 4.5;
+        $hAMS = 110;
+        $press = 743;
+        $aW = 25;
+        $sW = 80;
+        $interval = round(($time - $bul->ddhhm)/3600);
+        $this->assertEquals(8,$interval);
+        $this->assertTrue($interval > 3 && $interval < 12 && $bul->bulType == 1);
+        $this->assertEquals(-8, $bul->airTempAMS);
+        $amp->measure($temp, $hAMS, $press, $aW, $sW, $time);
+        $newBul = 'Метео11приближённый-16090-0110-50761-02-602507-04-612608-08-622708-12-622708-16-632809-20-622809-24-632911-30-633112-40-613315';
+        $bul1 = $amp->getBulletin();
+        $this->assertEquals($newBul,(string) $bul1);
     }
 }

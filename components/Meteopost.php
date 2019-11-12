@@ -75,8 +75,26 @@ abstract class Meteopost {
         5  => [-5, -5, -5, -4, -4, -4, -4, -4, -4],
         4  => [-4, -4, -4, -4, -3, -3, -3, -3, -3],
         3  => [-3, -3, -3, -3, -3, -3, -2, -2, -2],
+        2  => [-2, -2, -2, -2, -2, -2, -2, -2, -2],
+        1  => [-1, -1, -1, -1, -1, -1, -1, -1, -1],
         ];   
-
+    /**
+     * Поправки в температуру бюллетеня "Метеосредний"
+     *            (для исправления)
+     * @var array
+     */
+    protected $deltaTau = [
+        1 => [1, 0, 0, 0, 0, 0, 0, 0, 0],
+        2 => [1, 1, 0, 0, 0, 0, 0, 0, 0],
+        3 => [2, 1, 1, 0, 0, 0, 0, 0, 0],
+        4 => [3, 2, 1, 1, 0, 0, 0, 0, 0],
+        5 => [3, 3, 2, 1, 1, 0, 0, 0, 0],
+        6 => [4, 3, 3, 2, 1, 1, 0, 0, 0],
+        7 => [5, 4, 3, 3, 2, 1, 1, 0, 0],
+        8 => [6, 5, 4, 3, 3, 2, 1, 1, 0],
+        9 => [7, 6, 5, 4, 3, 3, 2, 1, 1],
+        10 => [8, 7, 6, 5, 4, 3, 3, 2, 1],
+    ];
 
     /**
      * Возвращает виртуальную температуру
@@ -131,7 +149,33 @@ abstract class Meteopost {
         }, $this->deltaAlpha);
         return $ret;
     }
-    
+    /**
+     * Возвращает массив сооставляющей температуры
+     * @param numeric $temp
+     * @return array
+     */
+    protected function getTempGroup($temp)
+    {
+        $ret = [];
+        $t0 = round($temp);
+        if($t0 > -3){
+            $tg = abs($t0<0?$t0-50:$t0);
+            foreach($this->hh as $h){
+                $ret[] = sprintf("%02d",$tg);
+                $h = $h; // Чтобы не ругалась проверка синтаксиса
+            }
+        } elseif ($t0 > -11) {
+            $ret = array_map(function($v){return sprintf("%02d",abs($v-50));},
+                    $this->tempDeviation[abs($t0)]);
+        } else {
+            $dec = $this->tempDeviation[floor(abs($t0)/10)*10];
+            $ed = $this->tempDeviation[abs($t0) - floor(abs($t0)/10)*10];
+            for($i = 0; $i < 9; $i++){
+                $ret[$i] = sprintf("%02d",abs($dec[$i] + $ed[$i]-50));
+            }
+        } 
+        return $ret;
+    }    
     /**
      * Управляет составлением/исправлением бюллетеня
      * @param numeric $time
@@ -143,9 +187,9 @@ abstract class Meteopost {
             throw new Exception('Не проведён замер метеоэлементов');
         }
 
-        $interval = empty($this->bulletin)? 2 :(integer) ($this->bulletin->ddhhm - $time)/3600;
+        $interval = empty($this->bulletin)? 2 :round(($time - $this->bulletin->ddhhm)/3600);
         
-        if($interval > 3 && $interval < 12 && $this->bulletin->type == 1){
+        if($interval > 3 && $interval < 12 && $this->bulletin->bulType == 1){
             $this->bulletin = $this->correctBulletin($this->measurements, $this->bulletin);
         } else {
             $this->bulletin = $this->compileBulletin($this->measurements);
@@ -184,11 +228,11 @@ abstract class Meteopost {
         $dH = (integer) substr($bbbtt, 0, 3);
         $atmPressAMS = $dH > 0 ? $dH : ($dH - 500) * -1;
         $dT = (integer) substr($bbbtt, 3, 2);
-        $airTempAMS = $dT > 0 ? $dT : ($dT - 50) * -1;
+        $airTempAMS = $dT < 50 ? $dT : ($dT - 50) * -1;
         // Группы по высотам
         $groups = [];
         while (!empty($arr)) {
-            $k = array_shift($arr);
+            $k = substr(array_shift($arr),0,2);
             $groups[$k] = array_shift($arr);
         }
         $this->bulletin = new MeteoBulletin(

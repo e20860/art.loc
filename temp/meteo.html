@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Метеостраница</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+	#numAMS {width:45px;}
+	#hAMS {width:60px;}
+	input[type=text]{width:90px; height:28px;}
+
+</style>
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>	
+<div class="container">
+	<p class="h1 text-center">Метеорологическая подготовка стрельбы</p>
+	<hr>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="row">
+				<p class="h4 text-center">Приём бюллетеня от АМС старшего начальника</p>
+				<hr>
+				<div class="row">
+				<form action="">
+					<div class="row">
+						<label for="numAMS">Метео11-</label>
+						<input  class="form-control" type="text" name="numAMS" id="numAMS" placeholder="№№">
+						<label for="ddhhm">-</label>
+						<input  class="form-control" type="text" name="ddhhm" id="ddhhm" placeholder="ДДЧЧМ">
+						<label for="hAMS">-</label>
+						<input  class="form-control" type="text" name="hAMS" id="hAMS" placeholder="ВВВ">
+						<label for="hhhtt">-</label>
+						<input  class="form-control" type="text" name="hhhtt" id="hhhtt" placeholder="НННТТ">
+						<label for="g02">-02-</label>
+						<input  class="form-control" type="text" name="g02" id="g02" placeholder="ТТННСС">
+						<label for="g04">-04-</label>
+						<input  class="form-control" type="text" name="g04" id="g04" placeholder="ТТННСС">
+						<label for="g08">-08-</label>
+						<input  class="form-control" type="text" name="g08" id="g08" placeholder="ТТННСС">
+						<label for="g12">-12-</label>
+						<input  class="form-control" type="text" name="g12" id="g12" placeholder="ТТННСС">
+						<label for="g16">-16-</label>
+						<input  class="form-control" type="text" name="g16" id="g16" placeholder="ТТННСС">
+						<label for="g20">-20-</label>
+						<input  class="form-control" type="text" name="g20" id="g20" placeholder="ТТННСС">
+						<label for="g24">-24-</label>
+						<input  class="form-control" type="text" name="g24" id="g24" placeholder="ТТННСС">
+						<label for="g30">-30-</label>
+						<input  class="form-control" type="text" name="g30" id="g30" placeholder="ТТННСС">
+						<label for="g40">-40-</label>
+						<input  class="form-control" type="text" name="g40" id="g40" placeholder="ТТННСС">
+					</div>
+					<div class="text-right">
+						<button class="btn btn-primary" id="sendBul">Принять</button>
+					</div>
+				</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			
+		</div>
+	</div>
+</div>
+<script  type="text/javascript">
+	$("#sendBul").on("click",function(evt){
+		evt.preventDefault();
+		var data = $(this).parent().parent().serialize();
+		$.ajax({
+			url:'',
+			type:'POST',
+			data:'data',
+			success:function(res){
+				console.log(res);
+			},
+			error:function(err){
+				console.log(err);
+			}
+		});
+	});
+</script>
+</body>
+</html>

@@ -43,54 +43,34 @@ class Grc
         $this->h = $h;
     }
     /**
-     * Возвращает координату Х
-     * @return integer
+     *  Магический метод
+     * @param type $name
+     * @return type
      */
-    public function getX()
-    {
-        return $this->x;
+    public function __get($name) {
+        if(property_exists($this,$name)){
+            return $this->$name;
+        }
     }
+
     /**
-     * Возвращает координату Y
-     * @return integer
-     */
-    public function getY()
-    {
-        return $this->y;
+     *  Магический метод
+     * @param type $name
+     * @param type $value
+     * @return type
+     */    
+    public function __set($name, $value) {
+        if(property_exists($this,$name)){
+            return $this->$name  = $value;
+        }
     }
-    /**
-     * Возвращает координату H
-     * @return integer
-     */
-    public function getH()
-    {
-        return $this->h;
-    }
-    /**
-     * Устанавливает координату X
-     * @param integer $x
-     */
-    public function setX($x)
-    {
-        $this->x = $x;
-    }
-    /**
-     * Устанавливает координату Y
-     * @param integer $y
-     */
-    public function setY($y)
-    {
-        $this->y = $y;
-    }
-    /**
-     * Устанавливает высоту точки H
-     * @param integer $h
-     */
-    public function setH($h)
-    {
-        $this->h = $h;
-    }
-    public function __toString() {
+
+        public function __toString() {
         return 'x= ' .$this->x.', y= ' .$this->y .', h= ' .$this->h;
+    }
+    
+    public function toTable()
+    {
+        return '' .round($this->x).' ' .round($this->y) .' ' .round($this->h);
     }
 }
