@@ -8,11 +8,6 @@ namespace app\components;
  * @author Admin
  */
 class Gun {
-    /**
-     * Калибр орудия (в последующем - тип)
-     * @var character
-     */
-    private $caliber;
     
     /**
      * Номер орудия в батарее
@@ -26,9 +21,8 @@ class Gun {
      */
     private $ammo;
     
-    public function __construct($caliber, $number) 
+    public function __construct($number) 
     {
-        $this->caliber = $caliber;
         $this->number = $number;
         $this->ammo = [
             'expence' => '', // расход

@@ -11,7 +11,11 @@ use app\components\Point;
  */
 class Op extends Point
 {
-    protected $unit = 'батр';
+    protected $unit = '5 батр';
+    
+    protected $caliber = 152;
+    
+    protected $artSystem;
 
     protected $guns = [];
     
