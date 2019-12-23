@@ -62,7 +62,7 @@ class MeteoController extends Controller
                     $data['aW'], $data['sW'], $time);
             $bul = $ams->getBulletin();
             $session = \Yii::$app->session;
-            $session['bulletin'] = bul;
+            $session['bulletin'] = $bul;
             return $this->renderAjax('result', compact('bul'));
         }
     }

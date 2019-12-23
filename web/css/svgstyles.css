@@ -1,0 +1,28 @@
+.svg-triangle{
+	margin: 0 auto;
+	width: 1005px;
+	height: 1005px;		
+}		
+.svg-triangle line , rect {
+	stroke:black;
+	stroke-width:1;
+        fill:none
+}
+
+#knp , #op{
+	stroke: black;
+	stroke-width:2;
+	fill:none
+}
+#target {
+	stroke:blue;
+	stroke-width:2;
+	fill:none;
+}
+#target rect{
+	stroke:black;
+	stroke-width:1;
+}
+#target line {
+	stroke-width:2;
+}

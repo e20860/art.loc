@@ -61,6 +61,30 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+        $sess = Yii::$app->session;
+        if(!isset($sess['battleOrder'])){
+            $bo = [
+                'osn' => 0,
+                'knp' => [
+                    'x' => 0,
+                    'y' => 0,
+                    'h' => 0,
+                ],
+                'op' => [
+                    'x' => 0,
+                    'y' => 0,
+                    'h' => 0,
+                ],
+                'nGuns' => 6,
+                'caliber' => 152,
+                'artSystem' => '2C3M',
+            ];
+            
+            $sess['battleOrder'] = $bo;
+            $sess['journal'] = [];
+        }
+        
+        
         return $this->render('index');
     }
 

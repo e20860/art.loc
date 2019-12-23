@@ -40,7 +40,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Главная', 'url' => ['/site/index']],
-            ['label' => 'Подготовка стрельбы', items =>[
+            ['label' => 'Подготовка стрельбы', 'items' =>[
                 ['label' => 'Боевой порядок', 'url' =>['/set/battleorder']],
                 ['label' => 'Разведка и определение координат целей', 'url' =>['/reconnaissance/journal']],
                 ['label' => 'Метеоподготовка', 'url' =>['/meteo/meteo']],

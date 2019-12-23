@@ -13,6 +13,7 @@
 ?>
 <div class="journal">
     <div class="container">
+
     <?php
     Modal::begin([
         'header' => '<h2>Результаты засечки цели</h2>',
@@ -121,14 +122,17 @@
            </div>
        </div>
        <hr>
-    <?php
-    Pjax::begin();
-        echo ListView::widget([
-            'dataProvider' => $provider,
-            'itemView' => '_item',
-            ]); 
-    Pjax::end();
-    ?>
+        <?php
+        Pjax::begin();
+            echo ListView::widget([
+                'dataProvider' => $provider,
+                'itemView' => '_item',
+                ]); 
+        Pjax::end();
+        ?>
+       <div class="text-left">
+            <a href="/reconnaissance/planshet" class="btn btn-info">Посмотреть крупномасштабный  планшет</a>
+        </div>               
     </div>
 
 </div>

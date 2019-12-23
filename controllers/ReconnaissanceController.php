@@ -50,7 +50,7 @@ class ReconnaissanceController extends Controller
         $bdu = round(rand($min, $max));
         $mdu = round(rand(1,99));        
         $tn->polars = new Polar(new Directional($bdu, $mdu),
-                round(rand(1500, 4500)),
+                round(rand(1500, 3500)),
                 new Sdu('-',0,round(rand(0,50))));
         $tn->rumb = new Directional(0,0);
         $tn->range = 0;
@@ -119,4 +119,13 @@ class ReconnaissanceController extends Controller
         \Yii::$app->session->setFlash('success','Данные засечки цели записаны в журнал');
         return \Yii::$app->response->redirect('/reconnaissance/journal');
         }
+   
+    /**
+     * Крупномасштабный планшет
+     */
+    public function actionPlanshet()
+    {
+        return $this->render('planshet');
+        
+    }
 }
