@@ -8,12 +8,12 @@
     // $provider - ArrayDataProvider
     // $notch Notch
     $knp = Yii::$app->session['knp'];
+    $tgtTypes = Yii::$app->session['tgtTypes'];
     // получает строки для текущей запрошенной страницы
     $rows = $provider->getModels();
 ?>
 <div class="journal">
     <div class="container">
-
     <?php
     Modal::begin([
         'header' => '<h2>Результаты засечки цели</h2>',
@@ -37,7 +37,14 @@
                 <?= $form->field($notch, 'num')->textInput(['autofocus' => true]) ?>
             </div>
             <div class="col-sm-8">
-                <?= $form->field($notch, 'tgtName')->textInput(array('placeholder' => 'Пехота укрытая', 'class'=>'form-control text-left')) ?>
+                <?php
+                 $params = [
+                    'prompt' => 'Выберите характер цели',
+                    'class'=>'form-control text-left', 
+                ];
+                echo $form->field($notch, 'tgtType')->dropDownList($tgtTypes,$params);
+                        //textInput(array('placeholder' => 'Пехота укрытая', 'class'=>'form-control text-left')) 
+                ?>
             </div>
         </div>
         <div class="row">

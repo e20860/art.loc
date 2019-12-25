@@ -83,7 +83,9 @@ class SiteController extends Controller
             $sess['battleOrder'] = $bo;
             $sess['journal'] = [];
         }
-        
+        if(!isset($sess['tgtTypes'])) {
+            $sess['tgtTypes'] = \Yii::$app->params['tgtTypes'];
+        }
         
         return $this->render('index');
     }

@@ -36,6 +36,18 @@
                         <line  x1="18.0484" y1="6.0499" x2="16.9269" y2= "5.1185" />
                         <rect x="0.1272" y="0.0636" width="20" height="10"/>
                 </g>
+                <path id = "ptur" d="m8,4 l0,8 -7,0 0,14 7,0 -6,6 6,-6 6,6 -6,-6 7,0 0,-14 -7,0 z" style="fill:none; stroke:blue; stroke-width:2"/>
+                <path id = "avto" d="m2,30 l0,-20 c0,-8 14,-8 14,0 l0,20 z" style="fill:none; stroke:blue; stroke-width:2"/>
+                <path id="btr" d="m4,30 l0,-20 6,-8 6,8 0,20z" style="fill:none; stroke:blue; stroke-width:2"/>
+                <path id="tank" d="m10,4 l-7,14 7,14 7,-14 z" style="fill:none; stroke:blue; stroke-width:2"/>
+                <path id="rpg" d="m10,4 l0,15 -4,0 8,0 -4,0 0,5 -6,6 6,-6 6,6 -6,-6 z" style="fill:none; stroke:blue; stroke-width:2"/>
+                <path id="np" d="m12,8 l-10,20 20,0z" style="fill:none; stroke:blue; stroke-width:2"/>
+                <path id="gun" d="m8,4 l0,26 m-4,-6 l0,-14 m8,0 l0,14" style="fill:none; stroke:blue; stroke-width:2"/>
+                <g id="tgt">
+                    <circle cx="12" cy="18" r="10" style="fill:none; stroke:blue; stroke-width:2"/>
+                    <line x1="11" y1="18" x2="13" y2="18" style="fill:none; stroke:blue; stroke-width:2"/>
+                </g>
+                <path id="machinegun" d="m2,30 c0,-8 12,-8 12,0 m-6,0 l0,-26" style="fill:none; stroke:blue; stroke-width:2"/>
             </defs>
             
         <?php

@@ -12,6 +12,8 @@ class Notch extends \yii\base\Model
     public $num;
     
     public $tgtName;
+    
+    public $tgtType;
 
     public $hours;
     

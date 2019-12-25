@@ -110,7 +110,8 @@ class ReconnaissanceController extends Controller
         $nr->polars = new Polar(new Directional($alpha[0], $alpha[1]), $data['range'], $e);
         $nr->rumb = new Directional(0, 0);
         $nr->range = 0;
-        $nr->targetName = $data['tgtName'];
+        $nr->targetType = $data['tgtType'];
+        $nr->targetName = \Yii::$app->session['tgtTypes'][$nr->targetType];
         $nr->coords = Topo::pgz(\Yii::$app->session['knp'], $nr->polars);
         $nr->accuracy = $data['accuracy'];
         $nr->notes = $data['notes'];

@@ -16,6 +16,7 @@ class TargetNotch extends Model
     public $polars; // дирекционный, дальность, угол места
     public $rumb;
     public $range;
+    public $targetType;
     public $targetName;
     public $coords; // прямоугольные координаты
     public $accuracy;
@@ -28,6 +29,7 @@ class TargetNotch extends Model
             'polars' => 'Полярные координаты',
             'rumb' => 'Правый',
             'range' => 'Дальность правого',
+            'targetType' => 'Тип цели',
             'targetName' => 'Наименованиие цели',
             'coords' => 'Прямоугольные координаты цели',
             'accuracy' => 'Характеристика точности',
